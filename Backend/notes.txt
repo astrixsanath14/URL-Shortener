@@ -1,0 +1,3 @@
+scp -i "URL Shortener.pem" Backend/* ec2-user@ec2-3-144-183-157.us-east-2.compute.amazonaws.com:~/
+
+ssh -i "URL Shortener.pem" ec2-user@ec2-3-144-183-157.us-east-2.compute.amazonaws.com

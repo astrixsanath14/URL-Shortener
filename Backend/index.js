@@ -1,5 +1,6 @@
 import express from "express";
 import randomstring from "randomstring";
+import validator from "validator";
 
 const app = express();
 
@@ -11,7 +12,7 @@ let SHORT_URL_VS_LONG_URL = new Map();
 function shortenURL(req, res) {
     let statusCode = null;
     let responseJson = null;
-    
+
     let longURL = req.body.long_url;
     let shortenedURL;
     if (LONG_URL_VS_SHORT_URL.has(longURL)) {
@@ -42,7 +43,7 @@ function retrieveLongURL(req, res) {
     if (longURL == null) {
         statusCode = 400;
         responseJson = {
-            'Error': 'long url does not exist!'
+            'error': 'long url does not exist!'
         };
     } else {
         statusCode = 200;
@@ -53,6 +54,16 @@ function retrieveLongURL(req, res) {
 
     res.status(statusCode).send(responseJson);
 }
+
+app.use('/shorten', (req, res,next) => {
+    if (!validator.isURL(req.body.long_url))
+    {
+        return res.status(400).send({
+            'error': 'invalid url!'
+        });
+    }
+    next();
+});
 
 app.post('/shorten', shortenURL);
 app.get('/retrieve', retrieveLongURL);
